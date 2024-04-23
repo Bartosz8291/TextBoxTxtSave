@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textbox Zapisz</title>
+</head>
+<body>
+  <form id="myForm">
+    <label for="textBox">Wpisz coś:</label><br>
+    <input type="text" id="textBox" name="textBox"><br><br>
+    <button type="button" onclick="saveData()">Zapisz</button>
+  </form>
+
+  <script>
+    function saveData() {
+      // Pobierz wartość z textboxa
+      var textBoxValue = document.getElementById("textBox").value;
+      
+      // Utwórz nowy obiekt Blob z zawartością textboxa
+      var blob = new Blob([textBoxValue], { type: "text/plain;charset=utf-8" });
+      
+      // Utwórz link do pobrania pliku
+      var link = document.createElement("a");
+      link.download = "TEXTBOXDATA.txt";
+      link.innerHTML = "Pobierz plik";
+      
+      // Sprawdź, czy przeglądarka wspiera atrybut 'download'
+      if (window.URL != null) {
+        // Użyj metody createObjectURL do utworzenia linku
+        link.href = window.URL.createObjectURL(blob);
+      } else {
+        // W niektórych przeglądarkach, które nie wspierają atrybutu 'download', użyj Data URI
+        link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(textBoxValue);
+        link.onclick = function() {
+          document.body.removeChild(link);
+        };
+        link.style.display = "none";
+        document.body.appendChild(link);
+      }
+      
+      // Dodaj link do dokumentu
+      document.body.appendChild(link);
+      
+      // Symuluj kliknięcie na link, aby uruchomić pobieranie
+      link.click();
+    }
+  </script>
+</body>
+</html>
